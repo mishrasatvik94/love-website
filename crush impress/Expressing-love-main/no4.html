@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>No 4</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: Arial, sans-serif;
+        background: #ffdce6;
+        color: #7a2040;
+        padding: 16px;
+      }
+
+      .card {
+        width: min(92vw, 540px);
+        text-align: center;
+        background: #fff4f7;
+        border-radius: 16px;
+        padding: 28px 20px;
+        box-shadow: 0 10px 26px rgba(122, 32, 64, 0.18);
+      }
+
+      h1 {
+        margin: 0 0 22px;
+      }
+
+      .btn {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 11px 22px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        background: #d64570;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="music" loop preload="auto">
+      <source src="music.mp3" type="audio/mpeg" />
+    </audio>
+
+    <main class="card">
+      <h1>I still think about you every day 💭</h1>
+      <a href="no5.html" class="btn">Next</a>
+    </main>
+
+    <script>
+      const music = document.getElementById("music");
+      music.volume = 1.0;
+
+      function startMusic() {
+        music.play().then(() => {
+          localStorage.setItem("musicStarted", "true");
+        }).catch(() => {});
+      }
+
+      function setupMusic() {
+        const savedTime = localStorage.getItem("musicTime");
+        if (savedTime) {
+          music.currentTime = Number(savedTime) || 0;
+        }
+
+        if (localStorage.getItem("musicStarted") === "true") {
+          startMusic();
+        }
+
+        const interactionHandler = () => startMusic();
+        document.addEventListener("click", interactionHandler, { once: true });
+        document.addEventListener("mousemove", interactionHandler, { once: true });
+        document.addEventListener("keypress", interactionHandler, { once: true });
+        document.addEventListener("touchstart", interactionHandler, { once: true, passive: true });
+
+        setInterval(() => {
+          if (!music.paused) {
+            localStorage.setItem("musicTime", String(music.currentTime));
+          }
+        }, 1000);
+      }
+
+      setupMusic();
+    </script>
+  </body>
+</html>

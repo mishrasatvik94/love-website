@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faguniya ❤️</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: Arial, sans-serif;
+        background: #ffdce6;
+        color: #7a2040;
+        padding: 16px;
+      }
+
+      .card {
+        width: min(92vw, 540px);
+        text-align: center;
+        position: relative;
+        background: #fff4f7;
+        border-radius: 16px;
+        padding: 28px 20px 34px;
+        box-shadow: 0 10px 26px rgba(122, 32, 64, 0.18);
+      }
+
+      h1 {
+        margin: 0 0 10px;
+      }
+
+      p {
+        margin: 0 0 22px;
+        font-size: 1.1rem;
+        line-height: 1.5;
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        position: relative;
+        min-height: 120px;
+        align-items: flex-start;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 999px;
+        padding: 11px 22px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .yes {
+        background: #ff4f84;
+      }
+
+      .no {
+        background: #d64570;
+        position: absolute;
+        left: 50%;
+        top: 56px;
+        transform: translateX(-50%);
+        transition: left 0.2s ease, top 0.2s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="music" loop preload="auto">
+      <source src="music.mp3" type="audio/mpeg" />
+    </audio>
+
+    <main class="card">
+      <h1>Faguniya ❤️</h1>
+      <p>I still love you... Will you come back to me?</p>
+
+      <div class="buttons">
+        <a href="yes.html" class="btn yes">YES</a>
+        <button type="button" id="no-btn" class="btn no">NO 😢</button>
+      </div>
+    </main>
+
+    <script>
+      const music = document.getElementById("music");
+      const noBtn = document.getElementById("no-btn");
+      const card = document.querySelector(".card");
+      music.volume = 1.0;
+
+      function startMusic() {
+        music.play().then(() => {
+          localStorage.setItem("musicStarted", "true");
+          console.log("Music playing");
+        }).catch(() => {});
+      }
+
+      function setupMusic() {
+        const savedTime = localStorage.getItem("musicTime");
+        if (savedTime) {
+          music.currentTime = Number(savedTime) || 0;
+        }
+
+        if (localStorage.getItem("musicStarted") === "true") {
+          startMusic();
+        }
+
+        const interactionHandler = () => startMusic();
+        document.addEventListener("click", interactionHandler, { once: true });
+        document.addEventListener("mousemove", interactionHandler, { once: true });
+        document.addEventListener("keypress", interactionHandler, { once: true });
+        document.addEventListener("touchstart", interactionHandler, { once: true, passive: true });
+
+        setInterval(() => {
+          if (!music.paused) {
+            localStorage.setItem("musicTime", String(music.currentTime));
+          }
+        }, 1000);
+      }
+
+      function moveNoButton() {
+        const cardRect = card.getBoundingClientRect();
+        const buttonWidth = noBtn.offsetWidth;
+        const buttonHeight = noBtn.offsetHeight;
+
+        const maxX = Math.max(0, cardRect.width - buttonWidth - 12);
+        const minY = 56;
+        const maxY = Math.max(minY, cardRect.height - buttonHeight - 12);
+
+        const x = Math.random() * maxX;
+        const y = minY + Math.random() * (maxY - minY);
+
+        noBtn.style.left = `${x}px`;
+        noBtn.style.top = `${y}px`;
+        noBtn.style.transform = "none";
+      }
+
+      noBtn.addEventListener("mouseenter", () => {
+        setTimeout(moveNoButton, 140);
+      });
+
+      noBtn.addEventListener("click", () => {
+        window.location.href = "no1.html";
+      });
+
+      setupMusic();
+      moveNoButton();
+    </script>
+  </body>
+</html>
